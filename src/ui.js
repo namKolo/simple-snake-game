@@ -1,33 +1,57 @@
 import { appStore } from "./appStore.js";
+import {
+  BOARD_COLS,
+  BOARD_ROWS,
+  CellClassMapping,
+  DirectionClassMapping,
+} from "./constants.js";
+import { pointEq } from "./lib/helpers.js";
 
-const renderSnake = (snake, parentNode) => {
-  snake.map((segment) => {
-    const snakeElement = document.createElement("div");
-    snakeElement.style.gridRowStart = segment.y;
-    snakeElement.style.gridColumnStart = segment.x;
-    snakeElement.classList.add("snake");
-    parentNode.appendChild(snakeElement);
-  });
+const getSnakeHeadClass = (direction) => {
+  return `snake-head ${DirectionClassMapping[direction]}`;
 };
 
-const renderFood = (food, parentNode) => {
-  const foodElement = document.createElement("div");
-  foodElement.style.gridRowStart = food.y;
-  foodElement.style.gridColumnStart = food.x;
-  foodElement.classList.add("food");
-  parentNode.appendChild(foodElement);
+const getCellClass = (boardValue, { snakeHead, direction }) => {
+  const value =
+    `cell ${CellClassMapping[boardValue]}` +
+    (snakeHead === true ? ` ${getSnakeHeadClass(direction)}` : "");
+  console.log(value);
+  return value;
 };
 
-export const renderGame = () => {
+export const initGame = () => {
   const state = appStore.getState();
 
-  const gameBoard = document.getElementById("game-board");
-  // reset gameboard
-  gameBoard.innerHTML = "";
+  const gameBoard = document.getElementsByClassName("snake-board")[0];
 
-  const { snake, food } = state;
+  gameBoard.style.width = `${30 * BOARD_ROWS}px`;
+  gameBoard.style.height = `${30 * BOARD_COLS}px`;
 
-  // render Snake/Food
-  renderSnake(snake, gameBoard);
-  renderFood(food, gameBoard);
+  const { board } = state;
+
+  board.map((row) =>
+    row.map((boardValue) => {
+      const cellElement = document.createElement("div");
+      cellElement.className = getCellClass(boardValue, {});
+      gameBoard.appendChild(cellElement);
+    })
+  );
+};
+
+export const updateGame = () => {
+  const state = appStore.getState();
+  const { board, snake, direction } = state;
+  const cells = document.getElementsByClassName("cell");
+
+  board.map((row, rowIndex) =>
+    row.map((boardValue, colIndex) => {
+      const snakeHead = snake[0];
+      const cellIndex = rowIndex * BOARD_ROWS + colIndex;
+
+      cells[cellIndex].className = getCellClass(boardValue, {
+        snakeHead: pointEq(snakeHead)({ x: rowIndex, y: colIndex }),
+        direction,
+      });
+    })
+  );
 };

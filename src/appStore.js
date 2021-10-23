@@ -4,4 +4,4 @@ import { snakeReducer } from "./snakeReducer.js";
 export const appStore = createStore(snakeReducer);
 
 // DEBUG
-appStore.subscribe(() => console.log(appStore.getState()));
+// appStore.subscribe(() => console.log(appStore.getState()));
