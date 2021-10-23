@@ -1,7 +1,9 @@
 /**
  * ACTIONS
  */
-export const changeDirection = ({ direction }) => ({
+const CHANGE_DIRECTION = "CHANGE_DIRECTION";
+const MOVE = "MOVE";
+export const changeDirection = (direction) => ({
   type: CHANGE_DIRECTION,
   direction,
 });
@@ -18,11 +20,12 @@ const getInitialState = () => ({
 
 export function snakeReducer(state = getInitialState(), action = {}) {
   switch (action.type) {
-    case "CHANGE_DIRECTION": {
+    case CHANGE_DIRECTION: {
+      state.direction = action.direction;
       return state;
     }
 
-    case "MOVE": {
+    case MOVE: {
       return state;
     }
 

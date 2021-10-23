@@ -1,4 +1,4 @@
-import { appStore } from "./appStore";
+import { appStore } from "./appStore.js";
 
 const renderSnake = (snake, parentNode) => {
   snake.map((segment) => {
